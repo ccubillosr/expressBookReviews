@@ -1,4 +1,7 @@
 # Distribution / packaging
 node_modules
+finalproject/node_modules/
+router/node_modules/
+
 
 

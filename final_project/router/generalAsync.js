@@ -2,15 +2,15 @@ const express = require('express');
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").doesExist;
 let users = require("./auth_users.js").users;
-const public_users = express.Router();
+const public_usersAsync = express.Router();
 
 // Get the book list available in the shop
-public_users.get('/',function (req, res) {
+public_usersAsync.get('/',function (req, res) {
   res.send(JSON.stringify(books,null,4));
 });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
+public_usersAsync.get('/isbn/:isbn',function (req, res) {
   const isbn = req.params.isbn;
   res.send(books[isbn])
  });
@@ -18,7 +18,6 @@ public_users.get('/isbn/:isbn',function (req, res) {
  let bookauthor=[];
 let booktitles=[];
 let bookreviews=[];
-
 
 let booklist =(author)=>{
   let book; 
@@ -42,7 +41,6 @@ let titlelist =(title)=>{
   return booktitles;
 }
 
-
 let reviewslist =(title)=>{
   let book; 
   bookreviews=[];
@@ -56,21 +54,21 @@ let reviewslist =(title)=>{
 
 
 // Get book details based on author
-public_users.get('/author/:author',function (req, res) {
+public_usersAsync.get('/author/:author',function (req, res) {
   const author = req.params.author;
   bookauthor= booklist(author)
   res.send(bookauthor);
 });
 
 // Get book details based on title
-public_users.get('/title/:title',function (req, res) {
+public_usersAsync.get('/title/:title',function (req, res) {
   const title = req.params.title;
   booktitles= titlelist(title);
   res.send(booktitles);
 });
 
 // Get book review based on title
-public_users.get('/review/:title',function (req, res) {
+public_usersAsync.get('/review/:title',function (req, res) {
   const title = req.params.title;
   bookreviews= reviewslist(title);
   res.send(bookreviews);
@@ -78,7 +76,7 @@ public_users.get('/review/:title',function (req, res) {
 
 
 // Add a book review
-public_users.put("/author/review/:isbn", (req, res) => {
+public_usersAsync.put("/author/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
   const review = req.body.review;
   const user = req.body.user;
@@ -92,7 +90,7 @@ public_users.put("/author/review/:isbn", (req, res) => {
   }
 });
 // Delete a book review
-public_users.delete("/author/review/:isbn", (req, res) => {
+public_usersAsync.delete("/author/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
   const user = req.body.user;
   if (isValid(user)) {
@@ -104,10 +102,11 @@ public_users.delete("/author/review/:isbn", (req, res) => {
   }
 });
 
+
 //  Get book review
-public_users.get('/author/review/:isbn',function (req, res) {
+public_usersAsync.get('/author/review/:isbn',function (req, res) {
   const reviews = req.params.isbn;
   res.send(books[reviews])
 });
 
-module.exports.general = public_users;
+module.exports.generalAsync = public_usersAsync;
